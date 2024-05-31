@@ -28,8 +28,8 @@ const ProductNav = (props: Props) => {
     }
    return (
         <li onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} >
-            <button onClick={() => setShow(!show)}  type='button' className={` text-lg flex items-center p-1 max-lg:font-semibold  transition ease-in duration-150 max-lg:justify-between max-lg:w-full ${show ? "lg:text-black ": ""}`}>
-                Product
+            <button onClick={() => setShow(!show)}  type='button' className={` text-lg flex items-center p-1 max-lg:font-semibold hover:text-gray-300 transition ease-in duration-150 max-lg:justify-between max-lg:w-full ${show ? "lg:text-black ": ""}`}>
+                Platform
                 <svg opacity="0.5" aria-hidden="true" height="16" fill='currentColor' viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" className={` ml-1 transition-all ease-in duration-200  max-lg:scale-x-125 ${show ? "lg:mt-2 opacity-40 max-lg:0": "mt-0 max-lg:-rotate-90"}`}>
                     <path d="M12.78 5.22a.749.749 0 0 1 0 1.06l-4.25 4.25a.749.749 0 0 1-1.06 0L3.22 6.28a.749.749 0 1 1 1.06-1.06L8 8.939l3.72-3.719a.749.749 0 0 1 1.06 0Z"></path>
                 </svg>
