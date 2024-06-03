@@ -6,6 +6,9 @@ import { Input } from "../../components/ui/input";
 import { cn } from "../../utils/cn"
 import { IconEye, IconEyeOff,   IconBrandGoogle, } from "@tabler/icons-react";
 import {  toast } from 'react-hot-toast';
+import Link from 'next/link'
+import { useRouter } from 'next/router';
+import User from "../../models/userModel"
 
 export default function SignupFormDemo() {
   const [showPassword, setShowPassword] = useState(false);
@@ -19,7 +22,8 @@ export default function SignupFormDemo() {
 
   const onSign= async()=>{
     try {
-        const response = await axios.post("/api/signup", user)
+      const router = useRouter();
+        const response = await axios.post("/api/signup", User)
         console.log(response.data)
         toast.success("User signed up succesfully")
         router.push("/signin")
@@ -134,3 +138,4 @@ const LabelInputContainer = ({
     </div>
   );
 };
+}
