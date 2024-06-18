@@ -3,10 +3,9 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
-import { cn } from "../../utils/cn";
-import { IconEye, IconEyeOff, IconBrandGoogle } from "@tabler/icons-react";
-import { toast } from "react-hot-toast";
-import Link from "next/link";
+import { cn } from "../../utils/cn"
+import { IconEye, IconEyeOff,   IconBrandGoogle, } from "@tabler/icons-react";
+import {  toast } from 'react-hot-toast';
 
 export default function SignupFormDemo() {
   const [showPassword, setShowPassword] = useState(false);
@@ -38,6 +37,16 @@ export default function SignupFormDemo() {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  const onSign= async()=>{
+    try {
+        const response = await axios.post("/api/signup", user)
+        console.log(response.data)
+        toast.success("User signed up succesfully")
+        router.push("/signin")
+    } catch (error) {
+        console.log(error)
+    }
 
   return (
     <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
@@ -150,3 +159,4 @@ const LabelInputContainer = ({
     </div>
   );
 };
+}
