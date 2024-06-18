@@ -1,5 +1,5 @@
 "use client";
-
+import * as React from 'react';
 import ProductNav from "./PlatformNav";
 import Navlist2 from "./NavUtils/Navlist2";
 import SolutionNav from "./WhoweNav";
@@ -8,7 +8,7 @@ import { useState } from "react";
 
 type Props = {};
 
-const Navbar = (props: Props) => {
+export default function Navbar(props: Props) {
   const [showNav, setShowNav] = useState(false);
 
   return (
@@ -94,4 +94,4 @@ const Navbar = (props: Props) => {
   );
 };
 
-export default Navbar;
+

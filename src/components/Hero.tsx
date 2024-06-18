@@ -2,8 +2,8 @@
 
 "use client";
 import {TypewriterEffectSmooth} from "../components/ui/typewriter-effect"
-
-export function HeroItem(){
+import * as React from 'react';
+export default function HeroItem(){
   const words = [
     {
       text: "Empowering",
@@ -21,9 +21,9 @@ export function HeroItem(){
     },
   ];
     return(
-        <>
+       
 
-    <div className="flex flex-col items-center justify-center h-[40rem]  ">
+    <div className="flex flex-col items-center justify-center h-[40rem]">
       <p className="text-neutral-600 dark:text-neutral-200 text-2xl   ">
       Crowdfund with the Transparency and Security of Web3      </p>
       <TypewriterEffectSmooth words={words} />
@@ -38,6 +38,6 @@ export function HeroItem(){
     </div>
 
 
-        </>
+      
     );
 }
