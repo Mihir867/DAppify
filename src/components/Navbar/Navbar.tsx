@@ -6,6 +6,8 @@ import SolutionNav from "./WhoweNav";
 import OpenSourceNav from "./SolutionsNav";
 import { useState, useEffect } from "react";
 import Link from 'next/link';
+import { signIn, signOut } from 'next-auth/react';
+import toast, {Toaster} from 'react-hot-toast';
 
 type Props = {};
 
@@ -25,9 +27,16 @@ export default function Navbar(props: Props) {
     }
   }, []);
 
+  const logout = () => {
+    localStorage.removeItem('user_name');
+    setIsAuthenticated(false);
+    setUserName('');
+    toast.success('Logged out successfully');
+  };
+
   return (
     <div className="text-black bg-white  px-10 md:px-20 border-b-2  shadow-2xl ">
-      
+      <Toaster />
       <div className="flex items-center max-lg:justify-between max-lg:flex-row-reverse">
         <div className="flex justify-between items-center max-lg:w-full">
           
@@ -91,7 +100,7 @@ export default function Navbar(props: Props) {
                   <span className="max-lg:py-2 max-lg:text-[16px] max-lg:font-bold">
                     {userName}
                   </span>
-                  <Link href="/logout" className="hover:text-neutral-400 max-lg:py-2 max-lg:text-[16px] max-lg:font-bold">
+                  <Link href="/" className="hover:text-neutral-400 max-lg:py-2 border-[1px] rounded-lg px-4 py-2 max-lg:text-[16px] max-lg:font-bold" onClick={logout}>
                     Logout
                   </Link>
                 </div>

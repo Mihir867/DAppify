@@ -1,15 +1,15 @@
 "use client";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
-import { cn } from "../../utils/cn"
-import { IconEye, IconEyeOff,   IconBrandGoogle, } from "@tabler/icons-react";
-import {  toast } from 'react-hot-toast';
+import { cn } from "../../utils/cn";
+import { IconEye, IconEyeOff, IconBrandGoogle } from "@tabler/icons-react";
+import { toast } from 'react-hot-toast';
 import Link from "next/link";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
-export default function SignupFormDemo(){
+export default function SignupFormDemo() {
   const [showPassword, setShowPassword] = useState(false);
   const [user, setUser] = useState({
     firstname: "",
@@ -19,6 +19,10 @@ export default function SignupFormDemo(){
     password: "",
     confirmpassword: ""
   });
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userName, setUserName] = useState('');
+  const { data: session } = useSession();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUser({ ...user, [e.target.id]: e.target.value });
@@ -40,10 +44,24 @@ export default function SignupFormDemo(){
     setShowPassword(!showPassword);
   };
 
-  
+  useEffect(() => {
+    if (session?.user?.name) {
+      setIsAuthenticated(true);
+      setUserName(session.user.name);
+      localStorage.setItem('user_name', session.user.name);
+    } else {
+      const storedUserName = localStorage.getItem('user_name');
+      if (storedUserName) {
+        setIsAuthenticated(true);
+        setUserName(storedUserName);
+      } else {
+        setIsAuthenticated(false);
+      }
+    }
+  }, [session]);
 
   return (
-    <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
+    <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl mt-20 p-4 md:p-8 shadow-input bg-white dark:bg-black">
       <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200 text-center">
         Sign Up Form
       </h2>
@@ -107,7 +125,9 @@ export default function SignupFormDemo(){
           <button
             className="relative bg-gray-200 group/btn flex space-x-2 items-center justify-center px-4 w-full text-black rounded-md h-10 font-medium shadow-input dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
             type="button"
-            onClick={()=>signIn('google')}
+            onClick={() => {
+              signIn('google', { callbackUrl: '/' });
+            }}
           >
             <IconBrandGoogle className="h-4 w-4 text-black dark:text-neutral-300" />
             <span className="text-black dark:text-neutral-300 text-sm">
@@ -154,4 +174,3 @@ const LabelInputContainer = ({
     </div>
   );
 };
-
