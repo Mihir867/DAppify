@@ -2,8 +2,9 @@
 import React, { useState } from "react";
 import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
-import { cn } from "@/utils/cn";
 import { IconEye, IconEyeOff } from "@tabler/icons-react";
+import Link from "next/link";
+import {cn} from "../../utils/cn"
 
 export default function SignupFormDemo() {
   const [showPassword, setShowPassword] = useState(false);
@@ -53,12 +54,12 @@ export default function SignupFormDemo() {
         <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
 
         <div className="flex justify-between">
-          <a href="/signup" className="text-md text-blue-500 hover:underline">
+          <Link href="/signup" className="text-md text-blue-500 hover:underline">
             Go to Signup Page
-          </a>
-          <a href="/forgot-password" className="text-md text-blue-500 hover:underline">
+          </Link>
+          <Link href="/forgot-password" className="text-md text-blue-500 hover:underline">
             Forgot Password?
-          </a>
+          </Link>
         </div>
       </form>
     </div>
