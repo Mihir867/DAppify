@@ -4,17 +4,24 @@ import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
 import { IconEye, IconEyeOff } from "@tabler/icons-react";
 import Link from "next/link";
-import {cn} from "../../utils/cn"
+import { cn } from "../../utils/cn";
+import { Auth } from "@supabase/auth-ui-react";
+import { ThemeSupa } from "@supabase/auth-ui-shared";
+import supabase from "@/app/api/Auth";
 
 export default function SignupFormDemo() {
   const [showPassword, setShowPassword] = useState(false);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Form submitted");
   };
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  
 
   return (
     <div className="max-w-md w-full mx-auto mt-20 rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
@@ -22,7 +29,7 @@ export default function SignupFormDemo() {
         Sign In
       </h2>
 
-      <form className="my-8  " onSubmit={handleSubmit}>
+      <form className="my-8" onSubmit={handleSubmit}>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
           <Input id="email" placeholder="bot@gmail.com" type="email" />
@@ -51,6 +58,8 @@ export default function SignupFormDemo() {
           <BottomGradient />
         </button>
 
+        
+
         <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
 
         <div className="flex justify-between">
@@ -62,6 +71,19 @@ export default function SignupFormDemo() {
           </Link>
         </div>
       </form>
+      <div className="auth mt-4">
+      <Auth
+  supabaseClient={supabase}
+  providers={['google']}
+  queryParams={{
+    access_type: 'offline',
+    prompt: 'consent',
+  }}
+  onlyThirdPartyProviders
+  
+/>
+
+        </div>
     </div>
   );
 }

@@ -15,24 +15,7 @@ export default function Navbar(props: Props) {
   const [showNav, setShowNav] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const [userName, setUserName] = useState('');
-
-  useEffect(() => {
-    const storedUserName = localStorage.getItem('user_name');
-    if (storedUserName) {
-      setIsAuthenticated(true);
-      setUserName(storedUserName);
-    } else {
-      setIsAuthenticated(false);
-    }
-  }, []);
-
-  const logout = () => {
-    localStorage.removeItem('user_name');
-    setIsAuthenticated(false);
-    setUserName('');
-    toast.success('Logged out successfully');
-  };
+  
 
   return (
     <div className="text-black bg-white  px-10 md:px-20 border-b-2  shadow-2xl ">
@@ -95,17 +78,7 @@ export default function Navbar(props: Props) {
               </ul>
             </nav>
             <div className="lg:flex items-center text-lg max-lg:flex-col lg:px-0 px-3 mb-3 lg:mb-0 text-left lg:space-x-4">
-            {isAuthenticated ? (
-                <div className="flex items-center space-x-4">
-                  <span className="max-lg:py-2 max-lg:text-[16px] max-lg:font-bold">
-                    {userName}
-                  </span>
-                  <Link href="/" className="hover:text-neutral-400 max-lg:py-2 border-[1px] rounded-lg px-4 py-2 max-lg:text-[16px] max-lg:font-bold" onClick={logout}>
-                    Logout
-                  </Link>
-                </div>
-              ) : (
-                <>
+            
                   <div className="max-lg:flex justify-center  max-lg:border-[1px] max-lg:mr-4 rounded-md max-lg:bg-white">
                     <Link href="/signin" className="hover:text-neutral-400 max-lg:py-2 max-lg:text-[16px] max-lg:font-bold ">
                       Sign in
@@ -114,8 +87,7 @@ export default function Navbar(props: Props) {
                   <Link href="/signup" className="max-lg:hidden px-4 py-[6px] border-[1px] rounded-md hover:text-neutral-400 ">
                     Sign up
                   </Link>
-                </>
-              )}
+              
             </div>
           </div>
         </div>
