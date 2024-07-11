@@ -6,8 +6,10 @@ import { IconEye, IconEyeOff } from "@tabler/icons-react";
 import Link from "next/link";
 import { cn } from "../../utils/cn";
 import { Auth } from "@supabase/auth-ui-react";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
+
 import supabase from "@/app/api/Auth";
+import { ThemeSupa } from "@supabase/auth-ui-shared";
+
 
 export default function SignupFormDemo() {
   const [showPassword, setShowPassword] = useState(false);
@@ -71,17 +73,20 @@ export default function SignupFormDemo() {
           </Link>
         </div>
       </form>
-      <div className="auth mt-4">
+      <div className="auth mt-4 border-none">
       <Auth
   supabaseClient={supabase}
-  providers={['google']}
+  providers={['google', 'github']}
+  appearance={{ theme: ThemeSupa }}
+  theme="dark"
+  
   queryParams={{
     access_type: 'offline',
     prompt: 'consent',
   }}
   onlyThirdPartyProviders
-  
 />
+
 
         </div>
     </div>
