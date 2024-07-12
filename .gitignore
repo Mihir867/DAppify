@@ -5,4 +5,4 @@
 /.pnp
 /.next/
 
-.env
+/.env/

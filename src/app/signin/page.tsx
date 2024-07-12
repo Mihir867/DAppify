@@ -6,24 +6,52 @@ import { IconEye, IconEyeOff } from "@tabler/icons-react";
 import Link from "next/link";
 import { cn } from "../../utils/cn";
 import { Auth } from "@supabase/auth-ui-react";
-
-import supabase from "@/app/api/Auth";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
-
+import { supabase } from "@/lib/supabase";
 
 export default function SignupFormDemo() {
   const [showPassword, setShowPassword] = useState(false);
+  const [data, setData] = useState({
+    email: "",
+    password: "",
+  });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e:any) => {
     e.preventDefault();
-    console.log("Form submitted");
+    await login();
+  };
+
+  const handleChange = (e:any) => {
+    const { name, value } = e.target;
+    setData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  
+  const login = async () => {
+    try {
+      const { email, password } = data;
+      let { data: loginData, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (loginData) {
+        console.log(loginData);
+      }
+
+      if (error) {
+        console.error(error.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="max-w-md w-full mx-auto mt-20 rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
@@ -34,7 +62,14 @@ export default function SignupFormDemo() {
       <form className="my-8" onSubmit={handleSubmit}>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
-          <Input id="email" placeholder="bot@gmail.com" type="email" />
+          <Input
+            id="email"
+            placeholder="bot@gmail.com"
+            type="email"
+            name="email"
+            value={data.email}
+            onChange={handleChange}
+          />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4 relative">
           <Label htmlFor="password">Password</Label>
@@ -42,6 +77,9 @@ export default function SignupFormDemo() {
             id="password"
             placeholder="••••••••"
             type={showPassword ? "text" : "password"}
+            name="password"
+            value={data.password}
+            onChange={handleChange}
           />
           <button
             type="button"
@@ -60,8 +98,6 @@ export default function SignupFormDemo() {
           <BottomGradient />
         </button>
 
-        
-
         <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
 
         <div className="flex justify-between">
@@ -74,21 +110,18 @@ export default function SignupFormDemo() {
         </div>
       </form>
       <div className="auth mt-4 border-none">
-      <Auth
-  supabaseClient={supabase}
-  providers={['google', 'github']}
-  appearance={{ theme: ThemeSupa }}
-  theme="dark"
-  
-  queryParams={{
-    access_type: 'offline',
-    prompt: 'consent',
-  }}
-  onlyThirdPartyProviders
-/>
-
-
-        </div>
+        <Auth
+          supabaseClient={supabase}
+          providers={['google', 'github']}
+          appearance={{ theme: ThemeSupa }}
+          theme="dark"
+          queryParams={{
+            access_type: 'offline',
+            prompt: 'consent',
+          }}
+          onlyThirdPartyProviders
+        />
+      </div>
     </div>
   );
 }
@@ -105,10 +138,7 @@ const BottomGradient = () => {
 const LabelInputContainer = ({
   children,
   className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
+}:any) => {
   return (
     <div className={cn("flex flex-col space-y-2 w-full", className)}>
       {children}

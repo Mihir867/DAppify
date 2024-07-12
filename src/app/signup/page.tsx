@@ -1,17 +1,16 @@
 "use client";
-import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
 import { cn } from "../../utils/cn";
-import { IconEye, IconEyeOff,  } from "@tabler/icons-react";
+import { IconEye, IconEyeOff } from "@tabler/icons-react";
 import { toast } from 'react-hot-toast';
 import Link from "next/link";
-
+import { supabase } from "../../lib/supabase";
 
 export default function SignupFormDemo() {
   const [showPassword, setShowPassword] = useState(false);
-  const [user, setUser] = useState({
+  const [data, setData] = useState({
     firstname: "",
     lastname: "",
     number: "",
@@ -20,18 +19,35 @@ export default function SignupFormDemo() {
     confirmpassword: ""
   });
 
- 
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUser({ ...user, [e.target.id]: e.target.value });
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setData((prevData) => ({
+      ...prevData,
+      [id]: value
+    }));
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (data.password !== data.confirmpassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+    await signup();
+  };
+
+  const signup = async () => {
     try {
-      const response = await axios.post("/api/signup", user);
-      console.log(response.data);
-      toast.success("User signed up successfully");
+      let { data: signupData, error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+      });
+
+      if (signupData) {
+        console.log("User signed up successfully", signupData);
+        toast.success("User signed up successfully");
+      }
+      
     } catch (error) {
       console.log(error);
       toast.error("Error signing up");
@@ -41,8 +57,6 @@ export default function SignupFormDemo() {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-
-
 
   return (
     <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl mt-20 p-4 md:p-8 shadow-input bg-white dark:bg-black">
@@ -54,20 +68,48 @@ export default function SignupFormDemo() {
         <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
           <LabelInputContainer>
             <Label htmlFor="firstname">First name</Label>
-            <Input id="firstname" placeholder="Mihir" type="text" value={user.firstname} onChange={handleChange} />
+            <Input
+              id="firstname"
+              placeholder="Mihir"
+              name="firstname"
+              type="text"
+              value={data.firstname}
+              onChange={handleChange}
+            />
           </LabelInputContainer>
           <LabelInputContainer>
             <Label htmlFor="lastname">Last name</Label>
-            <Input id="lastname" placeholder="Thakur" type="text" value={user.lastname} onChange={handleChange} />
+            <Input
+              id="lastname"
+              placeholder="Thakur"
+              name="lastname"
+              type="text"
+              value={data.lastname}
+              onChange={handleChange}
+            />
           </LabelInputContainer>
         </div>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="number">Contact Number</Label>
-          <Input id="number" placeholder="+91 123456789" type="text" value={user.number} onChange={handleChange} />
+          <Input
+            id="number"
+            placeholder="+91 123456789"
+            name="number"
+            type="text"
+            value={data.number}
+            onChange={handleChange}
+          />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
-          <Input id="email" placeholder="bot@gmail.com" type="email" value={user.email} onChange={handleChange} />
+          <Input
+            id="email"
+            placeholder="bot@gmail.com"
+            name="email"
+            type="email"
+            value={data.email}
+            onChange={handleChange}
+          />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4 relative">
           <Label htmlFor="password">Password</Label>
@@ -75,8 +117,9 @@ export default function SignupFormDemo() {
             id="password"
             placeholder="••••••••"
             type={showPassword ? "text" : "password"}
-            value={user.password}
+            value={data.password}
             onChange={handleChange}
+            name="password"
           />
           <button
             type="button"
@@ -92,8 +135,9 @@ export default function SignupFormDemo() {
             id="confirmpassword"
             placeholder="••••••••"
             type="password"
-            value={user.confirmpassword}
+            value={data.confirmpassword}
             onChange={handleChange}
+            name="confirmpassword"
           />
         </LabelInputContainer>
 
@@ -105,7 +149,6 @@ export default function SignupFormDemo() {
           <BottomGradient />
         </button>
 
-        
         <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
 
         <div className="flex justify-between">
@@ -133,10 +176,7 @@ const BottomGradient = () => {
 const LabelInputContainer = ({
   children,
   className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
+}:any) => {
   return (
     <div className={cn("flex flex-col space-y-2 w-full", className)}>
       {children}
